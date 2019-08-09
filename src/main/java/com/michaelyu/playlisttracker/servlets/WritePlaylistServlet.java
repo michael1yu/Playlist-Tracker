@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class WritePlaylistServlet extends HttpServlet {
     @Override
@@ -18,7 +19,9 @@ public class WritePlaylistServlet extends HttpServlet {
         createPlaylist(req);
     }
 
-    private void createPlaylist(HttpServletRequest req){
+    private void createPlaylist(HttpServletRequest req) throws IOException {
+        String reqBody = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        System.out.println(reqBody);
         FirestoreRepository repository = new FirestoreRepository();
         String playlistName = req.getParameter("playlist_name");
         Map<String, Object> data = new HashMap<>();
