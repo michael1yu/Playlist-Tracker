@@ -1,5 +1,7 @@
 package com.michaelyu.playlisttracker.servlets;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.michaelyu.playlisttracker.repositories.FirestoreRepository;
 
 import javax.servlet.ServletException;
@@ -20,12 +22,18 @@ public class WritePlaylistServlet extends HttpServlet {
     }
 
     private void createPlaylist(HttpServletRequest req) throws IOException {
+        //get request body as JSON string
         String reqBody = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        System.out.println(reqBody);
+        //convert JSON string to JsonObject
+        JsonObject jsonBody = new Gson().fromJson(reqBody, JsonObject.class);
+        //initialize firestore repository for access to firestore db
         FirestoreRepository repository = new FirestoreRepository();
-        String playlistName = req.getParameter("playlist_name");
+        //get data from JSON request body
+        String playlistName = jsonBody.get("playlist_name").getAsString();
+        //generate data that is going to be put in firestore document
         Map<String, Object> data = new HashMap<>();
         data.put("playlist_name", playlistName);
+        //update "last updated" field with current timestamp
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         data.put("last_updated", LocalDateTime.now().format(formatter).toString());
         repository.write(playlistName, playlistName, data);

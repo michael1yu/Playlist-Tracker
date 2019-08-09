@@ -1,5 +1,7 @@
 package com.michaelyu.playlisttracker.servlets;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.michaelyu.playlisttracker.models.Album;
 import com.michaelyu.playlisttracker.models.Image;
 import com.michaelyu.playlisttracker.models.Track;
@@ -20,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class WriteTrackServlet extends HttpServlet {
     @Override
@@ -28,13 +31,15 @@ public class WriteTrackServlet extends HttpServlet {
     }
 
     private void writeTrack(HttpServletRequest req) throws IOException {
+        String reqBody = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        JsonObject jsonBody = new Gson().fromJson(reqBody, JsonObject.class);
         //initializes FirestoreRepository to get access to firestore database
         FirestoreRepository firestoreRepository = new FirestoreRepository();
         //initializes LastFmRepository to get access to LastFm API
         LastFmRepository lastFmRepository = new LastFmRepository();
-        String playlistName = req.getParameter("playlist_name");
-        String trackName = req.getParameter("track_name");
-        String artist = req.getParameter("artist");
+        String playlistName = jsonBody.get("playlist_name").getAsString();
+        String trackName = jsonBody.get("track_name").getAsString();
+        String artist = jsonBody.get("artist").getAsString();
 
         //Passes artist, track, and Callback to lastfm repository
         lastFmRepository.getTrackInfo(artist, trackName, new Callback<Track>() {
