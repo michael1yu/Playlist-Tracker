@@ -102,7 +102,7 @@ public class FirestoreRepository {
             trackArray.add(track);
         }
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("track", trackArray);
+        jsonObject.add("tracks", trackArray);
         return jsonObject;
     }
 }
