@@ -11,7 +11,7 @@
     <groupId>com.michaelyu</groupId>
     <artifactId>playlisttracker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>playlisttracker</name>
     <description>Demo project for Spring Boot</description>
 
