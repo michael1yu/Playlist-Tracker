@@ -53,18 +53,18 @@ public class WriteTrackServlet extends HttpServlet {
                 Track track = response.body();
                 TrackInfo trackInfo = track.getTrackinfo();
                 //lastfm has found the track
-                if (trackInfo != null) {
-                    Album album = trackInfo.getAlbum();
-                    //lastfm has found the album
-                    if (album != null) {
-                        ArrayList<Image> images = album.getImages();
-                        data.put("album", album.getTitle());
-                        //iterate through array album art images and set field with size description
-                        for (Image image : images) {
-                            data.put("album_art_" + image.getSize(), image.getUrl());
-                        }
-                    }
-                }
+//                if (trackInfo != null) {
+//                    Album album = trackInfo.getAlbum();
+//                    //lastfm has found the album
+//                    if (album != null) {
+//                        ArrayList<Image> images = album.getImages();
+//                        data.put("album", album.getTitle());
+//                        //iterate through array album art images and set field with size description
+//                        for (Image image : images) {
+//                            data.put("album_art_" + image.getSize(), image.getUrl());
+//                        }
+//                    }
+//                }
 
                 //writes song doc to playlist name collection
                 firestoreRepository.write(playlistName, trackName, data);
