@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -96,11 +95,6 @@ public class FirestoreRepository {
             JsonObject track = new JsonObject();
             track.addProperty("track_name", queryDoc.getString("track_name"));
             track.addProperty("artist", queryDoc.getString("artist"));
-            track.addProperty("album", queryDoc.contains("album") ? queryDoc.getString("album") : "");
-            track.addProperty("album_art_extralarge", queryDoc.contains("album_art_extralarge") ? queryDoc.getString("album_art_extralarge") : "");
-            track.addProperty("album_art_large", queryDoc.contains("album_art_large") ? queryDoc.getString("album_art_large") : "");
-            track.addProperty("album_art_medium", queryDoc.contains("album_art_medium") ? queryDoc.getString("album_art_medium") : "");
-            track.addProperty("album_art_small", queryDoc.contains("album_art_small") ? queryDoc.getString("album_art_small") : "");
             trackArray.add(track);
         }
         JsonObject jsonObject = new JsonObject();
