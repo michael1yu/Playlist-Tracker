@@ -36,23 +36,32 @@ public class WriteTrackServlet extends HttpServlet {
         //initializes FirestoreRepository to get access to firestore database
         FirestoreRepository firestoreRepository = new FirestoreRepository();
         //initializes LastFmRepository to get access to LastFm API
-        LastFmRepository lastFmRepository = new LastFmRepository();
+        //LastFmRepository lastFmRepository = new LastFmRepository();
         String playlistName = jsonBody.get("playlist_name").getAsString();
         String trackName = jsonBody.get("track_name").getAsString();
         String artist = jsonBody.get("artist").getAsString();
 
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("is_track", true);
+        data.put("track_name", trackName);
+        data.put("artist", artist);
+        //writes song doc to playlist name collection
+        firestoreRepository.write(playlistName, trackName, data);
+        //writes playlist doc to playlist collection
+        writePlaylistTimestamp(firestoreRepository, playlistName);
         //Passes artist, track, and Callback to lastfm repository
-        lastFmRepository.getTrackInfo(artist, trackName, new Callback<Track>() {
-            //What happens if lastfm call is successful
-            @Override
-            public void onResponse(Call<Track> call, Response<Track> response) {
-                Map<String, Object> data = new HashMap<>();
-                data.put("is_track", true);
-                data.put("track_name", trackName);
-                data.put("artist", artist);
-                Track track = response.body();
-                TrackInfo trackInfo = track.getTrackinfo();
-                //lastfm has found the track
+//        lastFmRepository.getTrackInfo(artist, trackName, new Callback<Track>() {
+//            //What happens if lastfm call is successful
+//            @Override
+//            public void onResponse(Call<Track> call, Response<Track> response) {
+//                Map<String, Object> data = new HashMap<>();
+//                data.put("is_track", true);
+//                data.put("track_name", trackName);
+//                data.put("artist", artist);
+//                Track track = response.body();
+//                TrackInfo trackInfo = track.getTrackinfo();
+//                //lastfm has found the track
 //                if (trackInfo != null) {
 //                    Album album = trackInfo.getAlbum();
 //                    //lastfm has found the album
@@ -65,30 +74,30 @@ public class WriteTrackServlet extends HttpServlet {
 //                        }
 //                    }
 //                }
-
-                //writes song doc to playlist name collection
-                firestoreRepository.write(playlistName, trackName, data);
-                //writes playlist doc to playlist collection
-                writePlaylistTimestamp(firestoreRepository, playlistName);
-            }
-
-            //if lastfm API call fails
-            @Override
-            public void onFailure(Call<Track> call, Throwable throwable) {
-                //still write basic data
-                Map<String, Object> data = new HashMap<>();
-                data.put("is_track", true);
-                data.put("track_name", trackName);
-                data.put("artist", artist);
-
-
-                firestoreRepository.write(playlistName, trackName, data);
-                writePlaylistTimestamp(firestoreRepository, playlistName);
-
-                //print out error message
-                System.out.println(throwable.getMessage());
-            }
-        });
+//
+//                //writes song doc to playlist name collection
+//                firestoreRepository.write(playlistName, trackName, data);
+//                //writes playlist doc to playlist collection
+//                writePlaylistTimestamp(firestoreRepository, playlistName);
+//            }
+//
+//            //if lastfm API call fails
+//            @Override
+//            public void onFailure(Call<Track> call, Throwable throwable) {
+//                //still write basic data
+//                Map<String, Object> data = new HashMap<>();
+//                data.put("is_track", true);
+//                data.put("track_name", trackName);
+//                data.put("artist", artist);
+//
+//
+//                firestoreRepository.write(playlistName, trackName, data);
+//                writePlaylistTimestamp(firestoreRepository, playlistName);
+//
+//                //print out error message
+//                System.out.println(throwable.getMessage());
+//            }
+//        });
     }
 
     //writes timestamp of when the write occurred

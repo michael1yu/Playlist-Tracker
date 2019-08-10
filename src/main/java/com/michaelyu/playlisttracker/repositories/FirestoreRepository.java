@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -64,6 +65,7 @@ public class FirestoreRepository {
         Gson gson = new Gson();
         return gson.toJson(this);
     }
+
 
     private void initialize() throws IOException {
         InputStream serviceAccount = new ByteArrayInputStream(getCredentials().getBytes());
